@@ -237,20 +237,21 @@ inline double getBackgroundDensity(double rho)
 }
 inline double getTex()
 {
-  return 1.
+  return 1.;
 }
 inline double getTey(double rho, double z)
 {
-  double rho_sqr = rho*rho
-  double denom = 1 + 8 * 0.1 * rho_sqr
-  return (-(1/denom) * z) / rho
+  double rho_sqr = rho*rho;
+  double denom = 1 + 8 * 0.1 * rho_sqr;
+  return (-(1/denom) * z) / rho;
 }
 
 inline double getTez(double rho, double y)
 {
-  double rho_sqr = rho*rho
-  double denom = 1 + 8 * 0.1 * rho_sqr
-  return ((1/denom) * y) / rho
+  double rho_sqr = rho*rho;
+  double denom = 1 + 8 * 0.1 * rho_sqr;
+  return ((1/denom) * y) / rho;
+}
 
 // ======================================================================
 // get_beta
