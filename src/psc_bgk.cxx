@@ -127,11 +127,23 @@ Grid_t* setupGrid()
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC},
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC}};
 
-  auto kinds = Grid_t::Kinds(NR_KINDS);
+
+
+  enum
+{
+  KIND_ELECTRON_SECOND,
+  KIND_ELECTRON_BACKGROUND,
+  KIND_ION,
+  N_MY_KINDS,
+};
+
+  Grid_t::Kinds kinds(N_MY_KINDS);
   kinds[KIND_ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
   kinds[KIND_ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
   kinds[KIND_ION] = {g.q_i, g.m_i, "i"};
 
+
+  
   mpi_printf(MPI_COMM_WORLD, "lambda_D = %g\n",
              sqrt(parsedData->get_interpolated(COL_TE, 0)));
 
@@ -325,7 +337,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
                         (g.reverse_v_half && y < 0 ? -1 : 1);
           double pz = coef * g.m_e * vphi * y / rho;
           double py = coef * g.m_e * -vphi * z / rho;
-          double pz = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
+          double px = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
           np.p = setup_particles.createMaxwellian(
             {np.kind, np.n, {px, py, pz}, {Te, Te, Te}, np.tag});
         } else {
