@@ -120,13 +120,6 @@ void setupParameters(int argc, char** argv)
   N_MY_KINDS,
 };
 
-  auto grid_ptr = setupGrid();
-  auto& grid = *grid_ptr;
-
-  Mparticles mprts(grid);
-  MfieldsState mflds(grid);
-  grid.kinds = kinds;
-
 {
   auto domain = Grid_t::Domain{
     {g.n_grid_3, g.n_grid, g.n_grid},           // # grid points
