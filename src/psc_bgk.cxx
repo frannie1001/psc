@@ -133,10 +133,10 @@ void setupParameters(int argc, char** argv)
 
 
 
-  Grid_t::Kinds kinds(N_MY_KINDS);
-  kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
-  kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
-  kinds[KIND_ION] = {g.q_i, g.m_i, "i"};
+  auto kinds = Grid_t::Kinds(3);
+  kinds[0] = {g.q_e, g.m_e, "e1"};
+  kinds[1] = {g.q_e, g.m_e, "e0"};
+  kinds[2] = {g.q_i, g.m_i, "i"};
 
 
 
@@ -349,7 +349,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     double Ti = g.T_i;
     switch (kind) {
 
-      case ELECTRON_SECOND:
+      case 0:
         np.n = (qDensity(idx[0], idx[1], idx[2], 0, p) -
                 getIonDensity(rho) * g.q_i - getBackgroundDensity(rho) * g.q_e) /
                g.q_e;
@@ -373,13 +373,13 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         break;
 
 
-      case ELECTRON_BACKGROUND:
+      case 1:
         np.n = getBackgroundDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {get_beta()*get_beta(), get_beta()*get_beta(), get_beta()*get_beta()}, np.tag});
         break;
 
-      case ION_KIND:
+      case 2:
         np.n = getIonDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
