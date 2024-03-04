@@ -25,7 +25,7 @@ using PscConfig = PscConfig1vbecCuda<Dim>;
 #else
 using PscConfig = PscConfig1vbecDouble<Dim>;
 #endif
-
+psc_bgk.n_kinds = N_MY_KINDS
 // ----------------------------------------------------------------------
 
 using BgkMfields = PscConfig::Mfields;
