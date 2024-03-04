@@ -25,8 +25,6 @@ using PscConfig = PscConfig1vbecCuda<Dim>;
 #else
 using PscConfig = PscConfig1vbecDouble<Dim>;
 #endif
-psc_bgk.n_kinds = N_MY_KINDS;
-#endif
 
 // ----------------------------------------------------------------------
 
@@ -114,8 +112,21 @@ void setupParameters(int argc, char** argv)
 // which is really more than just the domain and its decomposition, it
 // also encompasses PC normalization parameters, information about the
 // particle kinds, etc.
+  enum
+{
+  KIND_ELECTRON_SECOND,
+  KIND_ELECTRON_BACKGROUND,
+  KIND_ION,
+  N_MY_KINDS,
+};
 
-Grid_t* setupGrid()
+  auto grid_ptr = setupGrid();
+  auto& grid = *grid_ptr;
+
+  Mparticles mprts(grid);
+  MfieldsState mflds(grid);
+  grid.kinds = kinds;
+
 {
   auto domain = Grid_t::Domain{
     {g.n_grid_3, g.n_grid, g.n_grid},           // # grid points
@@ -129,15 +140,6 @@ Grid_t* setupGrid()
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC},
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC}};
 
-
-
-  enum
-{
-  KIND_ELECTRON_SECOND,
-  KIND_ELECTRON_BACKGROUND,
-  KIND_ION,
-  N_MY_KINDS,
-};
 
   Grid_t::Kinds kinds(N_MY_KINDS);
   kinds[KIND_ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
