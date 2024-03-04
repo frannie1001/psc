@@ -133,7 +133,7 @@ void setupParameters(int argc, char** argv)
 
 
 
-  auto kinds = Grid_t::Kinds(3);
+  typename kinds = Grid_t::Kinds(3);
   kinds[0] = {g.q_e, g.m_e, "e1"};
   kinds[1] = {g.q_e, g.m_e, "e0"};
   kinds[2] = {g.q_i, g.m_i, "i"};
