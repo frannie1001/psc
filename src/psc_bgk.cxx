@@ -48,7 +48,13 @@ enum DATA_COL
   COL_PHI,
   n_cols
 };
-
+  enum
+{
+          ELECTRON_SECOND,
+            ELECTRON_BACKGROUND,
+              ION_KIND,
+                N_MY_KINDS,
+};
 // ======================================================================
 // Global parameters
 
@@ -126,20 +132,28 @@ void setupParameters(int argc, char** argv)
     {0., -.5 * g.box_size, -.5 * g.box_size},   // *offset* for origin
     {g.n_patches_3, g.n_patches, g.n_patches}}; // # patches
 
-  auto bc =
+        auto bc =
     psc::grid::BC{{BND_FLD_PERIODIC, BND_FLD_PERIODIC, BND_FLD_PERIODIC},
                   {BND_FLD_PERIODIC, BND_FLD_PERIODIC, BND_FLD_PERIODIC},
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC},
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC}};
 
 
+<<<<<<< HEAD
+
+  Grid_t::Kinds kinds(N_MY_KINDS);
+  kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
+  kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
+  kinds[KIND_ION] = {g.q_i, g.m_i, "i"};
+=======
   Grid_t::Kinds kinds(N_MY_KINDS);
   kinds[KIND_ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
   kinds[KIND_ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
   kinds[ION_KIND] = {g.q_i, g.m_i, "i"};
+>>>>>>> 4840e883b76e3d12d7ae078ef19b4728e3f562ca
 
 
-  
+
   mpi_printf(MPI_COMM_WORLD, "lambda_D = %g\n",
              sqrt(parsedData->get_interpolated(COL_TE, 0)));
 
@@ -216,6 +230,19 @@ inline double getIonDensity(double rho)
   double potential = parsedData->get_interpolated(COL_PHI, rho);
   return std::exp(-potential / g.T_i);
 }
+
+inline double getSecondDensity(double rho)
+{
+        double potential = parsedData->get_interpolated(COL_PHI, rho);
+        double rho_sqr = sqr(rho);
+        double gamma = 1 + 8 * 0.1 * rho_sqr;
+        double density = std::exp(potential)*4*(1/(std::sqrt(gamma*3)))*std::exp(-4*(0.1)*rho_sqr*rho_sqr*(1/std::sqrt(gamma))-(4/3));
+        return density;
+}
+
+
+
+
 inline double getBackgroundDensity(double rho)
 {
   double potential = parsedData->get_interpolated(COL_PHI, rho);
@@ -318,10 +345,8 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     double Ti = g.T_i;
     switch (kind) {
 
-      case KIND_ELECTRON_SECOND:
-        np.n = (qDensity(idx[0], idx[1], idx[2], 0, p) -
-                getIonDensity(rho) * g.q_i - getBackgroundDensity(rho)) /
-               g.q_e;
+      case 0:
+        np.n = getSecondDensity(rho);
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
@@ -342,13 +367,17 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         break;
 
 
-      case KIND_ELECTRON_BACKGROUND:
+      case 1:
         np.n = getBackgroundDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {1, 1, 1}, np.tag});
         break;
-      
+
+<<<<<<< HEAD
+      case 2:
+=======
       case ION_KIND:
+>>>>>>> 4840e883b76e3d12d7ae078ef19b4728e3f562ca
         np.n = getIonDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
