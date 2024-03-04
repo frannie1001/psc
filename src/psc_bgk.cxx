@@ -118,7 +118,8 @@ void setupParameters(int argc, char** argv)
 // which is really more than just the domain and its decomposition, it
 // also encompasses PC normalization parameters, information about the
 // particle kinds, etc.
-
+Grid_t* setupGrid()
+{
   auto domain = Grid_t::Domain{
     {g.n_grid_3, g.n_grid, g.n_grid},           // # grid points
     {g.box_size_3, g.box_size, g.box_size},     // physical lengths
