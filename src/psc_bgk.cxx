@@ -116,7 +116,7 @@ void setupParameters(int argc, char** argv)
 {
   KIND_ELECTRON_SECOND,
   KIND_ELECTRON_BACKGROUND,
-  KIND_ION,
+  ION_KIND,
   N_MY_KINDS
 };
 
@@ -137,7 +137,7 @@ void setupParameters(int argc, char** argv)
   Grid_t::Kinds kinds(N_MY_KINDS);
   kinds[KIND_ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
   kinds[KIND_ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
-  kinds[KIND_ION] = {g.q_i, g.m_i, "i"};
+  kinds[ION_KIND] = {g.q_i, g.m_i, "i"};
 
 
   
@@ -349,7 +349,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
           {np.kind, np.n, {0, 0, 0}, {1, 1, 1}, np.tag});
         break;
       
-      case KIND_ION:
+      case ION_KIND:
         np.n = getIonDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
