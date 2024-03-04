@@ -207,6 +207,11 @@ inline double getIonDensity(double rho)
     return g.n_i;
   double potential = parsedData->get_interpolated(COL_PHI, rho);
   return std::exp(-potential / g.T_i);
+
+inline double getBackgroundDensity(double rho)
+{
+  double potential = parsedData->get_interpolated(COL_PHI, rho);
+  return std::exp(potential);
 }
 
 // ======================================================================
@@ -307,7 +312,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
 
       case KIND_ELECTRON_SECOND:
         np.n = (qDensity(idx[0], idx[1], idx[2], 0, p) -
-                getIonDensity(rho) * g.q_i) /
+                getIonDensity(rho) * g.q_i - getBackgroundDensity(rho)) /
                g.q_e;
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
@@ -318,21 +323,21 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
           double vphi = parsedData->get_interpolated(COL_V_PHI, rho);
           double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
                         (g.reverse_v_half && y < 0 ? -1 : 1);
-
           double pz = coef * g.m_e * vphi * y / rho;
           double py = coef * g.m_e * -vphi * z / rho;
+          double pz = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, py, pz}, {Te, Te, Te}, np.tag});
+            {np.kind, np.n, {px, py, pz}, {Te, Te, Te}, np.tag});
         } else {
           np.p = pdist(y, z, rho);
         }
         break;
 
 
-        case KIND_ELECTRON_BACKGROUND:
-        np.n = getIonDensity(rho);
+      case KIND_ELECTRON_BACKGROUND:
+        np.n = getBackgroundDensity(rho);
         np.p = setup_particles.createMaxwellian(
-          {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
+          {np.kind, np.n, {0, 0, 0}, {1, 1, 1}, np.tag});
         break;
       
       case KIND_ION:
