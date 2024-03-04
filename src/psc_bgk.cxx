@@ -120,7 +120,6 @@ void setupParameters(int argc, char** argv)
   N_MY_KINDS
 };
 
-{
   auto domain = Grid_t::Domain{
     {g.n_grid_3, g.n_grid, g.n_grid},           // # grid points
     {g.box_size_3, g.box_size, g.box_size},     // physical lengths
