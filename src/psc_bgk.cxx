@@ -128,7 +128,8 @@ Grid_t* setupGrid()
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC}};
 
   auto kinds = Grid_t::Kinds(NR_KINDS);
-  kinds[KIND_ELECTRON] = {g.q_e, g.m_e, "e"};
+  kinds[KIND_ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
+  kinds[KIND_ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
   kinds[KIND_ION] = {g.q_i, g.m_i, "i"};
 
   mpi_printf(MPI_COMM_WORLD, "lambda_D = %g\n",
@@ -304,7 +305,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     double Ti = g.T_i;
     switch (kind) {
 
-      case KIND_ELECTRON:
+      case KIND_ELECTRON_SECOND:
         np.n = (qDensity(idx[0], idx[1], idx[2], 0, p) -
                 getIonDensity(rho) * g.q_i) /
                g.q_e;
@@ -327,6 +328,13 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         }
         break;
 
+
+        case KIND_ELECTRON_BACKGROUND:
+        np.n = getIonDensity(rho);
+        np.p = setup_particles.createMaxwellian(
+          {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
+        break;
+      
       case KIND_ION:
         np.n = getIonDensity(rho);
         np.p = setup_particles.createMaxwellian(
