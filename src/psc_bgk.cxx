@@ -112,12 +112,12 @@ void setupParameters(int argc, char** argv)
 // which is really more than just the domain and its decomposition, it
 // also encompasses PC normalization parameters, information about the
 // particle kinds, etc.
-  enum
+  enum MY_KINDS
 {
   KIND_ELECTRON_SECOND,
   KIND_ELECTRON_BACKGROUND,
   KIND_ION,
-  N_MY_KINDS,
+  N_MY_KINDS
 };
 
 {
