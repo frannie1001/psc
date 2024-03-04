@@ -128,8 +128,8 @@ Grid_t* setupGrid()
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC}};
 
   auto kinds = Grid_t::Kinds(NR_KINDS);
-  kinds[KIND_ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
   kinds[KIND_ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
+  kinds[KIND_ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
   kinds[KIND_ION] = {g.q_i, g.m_i, "i"};
 
   mpi_printf(MPI_COMM_WORLD, "lambda_D = %g\n",
