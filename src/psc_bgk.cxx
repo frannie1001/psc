@@ -48,7 +48,13 @@ enum DATA_COL
   COL_PHI,
   n_cols
 };
-
+  enum
+{
+          ELECTRON_SECOND,
+            ELECTRON_BACKGROUND,
+              ION_KIND,
+                N_MY_KINDS,
+};
 // ======================================================================
 // Global parameters
 
@@ -113,23 +119,27 @@ void setupParameters(int argc, char** argv)
 // also encompasses PC normalization parameters, information about the
 // particle kinds, etc.
 
-Grid_t* setupGrid()
-{
   auto domain = Grid_t::Domain{
     {g.n_grid_3, g.n_grid, g.n_grid},           // # grid points
     {g.box_size_3, g.box_size, g.box_size},     // physical lengths
     {0., -.5 * g.box_size, -.5 * g.box_size},   // *offset* for origin
     {g.n_patches_3, g.n_patches, g.n_patches}}; // # patches
 
-  auto bc =
+        auto bc =
     psc::grid::BC{{BND_FLD_PERIODIC, BND_FLD_PERIODIC, BND_FLD_PERIODIC},
                   {BND_FLD_PERIODIC, BND_FLD_PERIODIC, BND_FLD_PERIODIC},
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC},
                   {BND_PRT_PERIODIC, BND_PRT_PERIODIC, BND_PRT_PERIODIC}};
 
-  auto kinds = Grid_t::Kinds(NR_KINDS);
-  kinds[KIND_ELECTRON] = {g.q_e, g.m_e, "e"};
+
+
+  Grid_t::Kinds kinds(N_MY_KINDS);
+  kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
+  kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
   kinds[KIND_ION] = {g.q_i, g.m_i, "i"};
+
+
+
 
   mpi_printf(MPI_COMM_WORLD, "lambda_D = %g\n",
              sqrt(parsedData->get_interpolated(COL_TE, 0)));
@@ -208,6 +218,40 @@ inline double getIonDensity(double rho)
   return std::exp(-potential / g.T_i);
 }
 
+inline double getSecondDensity(double rho)
+{
+        double potential = parsedData->get_interpolated(COL_PHI, rho);
+        double rho_sqr = sqr(rho);
+        double gamma = 1 + 8 * 0.1 * rho_sqr;
+        double density = std::exp(potential)*4*(1/(std::sqrt(gamma*3)))*std::exp(-4*(0.1)*rho_sqr*rho_sqr*(1/std::sqrt(gamma))-(4/3));
+        return density;
+}
+
+
+
+
+inline double getBackgroundDensity(double rho)
+{
+  double potential = parsedData->get_interpolated(COL_PHI, rho);
+  return std::exp(potential);
+}
+inline double getTex()
+{
+  return 1.
+}
+inline double getTey(double rho, double z)
+{
+  double rho_sqr = rho*rho
+  double denom = 1 + 8 * 0.1 * rho_sqr
+  return (-(1/denom) * z) / rho
+}
+
+inline double getTez(double rho, double y)
+{
+  double rho_sqr = rho*rho
+  double denom = 1 + 8 * 0.1 * rho_sqr
+  return ((1/denom) * y) / rho
+
 // ======================================================================
 // get_beta
 // Return the conversion factor from paper units to psc units.
@@ -216,7 +260,7 @@ double get_beta()
 {
   // PSC is normalized as c=1, but the paper has electron thermal velocity
   // v_e=1. Beta is v_e/c = sqrt(Te_paper) / sqrt(Te_psc)
-  const double PAPER_ELECTRON_TEMPERATURE = 1.;
+  const double PAPER_ELECTRON_TEMPERATURE = 10.;
   const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
   return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
 }
@@ -304,9 +348,9 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     double Ti = g.T_i;
     switch (kind) {
 
-      case KIND_ELECTRON:
+      case ELECTRON_SECOND:
         np.n = (qDensity(idx[0], idx[1], idx[2], 0, p) -
-                getIonDensity(rho) * g.q_i) /
+                getIonDensity(rho) * g.q_i - getBackgroundDensity(rho) * g.q_e) /
                g.q_e;
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
@@ -317,17 +361,24 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
           double vphi = parsedData->get_interpolated(COL_V_PHI, rho);
           double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
                         (g.reverse_v_half && y < 0 ? -1 : 1);
-
           double pz = coef * g.m_e * vphi * y / rho;
           double py = coef * g.m_e * -vphi * z / rho;
+          double px = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, py, pz}, {Te, Te, Te}, np.tag});
+            {np.kind, np.n, {0, py, pz}, {getTex(), getTey(rho,z), getTez(rho,y)}, np.tag});
         } else {
           np.p = pdist(y, z, rho);
         }
         break;
 
-      case KIND_ION:
+
+      case ELECTRON_BACKGROUND:
+        np.n = getBackgroundDensity(rho);
+        np.p = setup_particles.createMaxwellian(
+          {np.kind, np.n, {0, 0, 0}, {get_beta()*get_beta(), get_beta()*get_beta(), get_beta()*get_beta()}, np.tag});
+        break;
+
+      case ION_KIND:
         np.n = getIonDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
