@@ -224,7 +224,7 @@ inline double getIonDensity(double rho)
 inline double getBackgroundDensity(double rho)
 {
   double potential = parsedData->get_interpolated(COL_PHI, rho);
-  return std::exp(potential);
+  return std::exp(potential/sqr(get_beta());
 }
 
 inline double getTey(double rho, double z)
@@ -249,7 +249,7 @@ double get_beta()
 {
   // PSC is normalized as c=1, but the paper has electron thermal velocity
   // v_e=1. Beta is v_e/c = sqrt(Te_paper) / sqrt(Te_psc)
-  const double PAPER_ELECTRON_TEMPERATURE = .1;
+  const double PAPER_ELECTRON_TEMPERATURE = 1;
   const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
   return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
 }
@@ -291,8 +291,8 @@ struct pdist
     : y{y},
       z{z},
       rho{rho},
-      v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }},
-      v_rho_dist{0, get_beta()},
+      v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
+      v_rho_dist{0, get_beta()}, //mean, std dev
       v_x_dist{0, get_beta()}
   {}
 
@@ -312,7 +312,7 @@ struct pdist
 
 private:
   double y, z, rho;
-  rng::InvertedCdf<double> v_phi_dist;
+  rng::Normal<double> v_phi_dist;
   rng::Normal<double> v_rho_dist;
   rng::Normal<double> v_x_dist;
 };
