@@ -134,10 +134,10 @@ Grid_t* setupGrid()
 
 
 
-  Grid_t::Kinds kinds(3);
-  kinds[0] = {g.q_e, g.m_e, "e1"};
-  kinds[1] = {g.q_e, g.m_e, "e0"};
-  kinds[2] = {g.q_i, g.m_i, "i"};
+  Grid_t::Kinds kinds(N_MY_KINDS);
+  kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
+  kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
+  kinds[ION_KIND] = {g.q_i, g.m_i, "i"};
 
 
 
