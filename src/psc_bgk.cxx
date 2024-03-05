@@ -219,16 +219,6 @@ inline double getIonDensity(double rho)
   return std::exp(-potential / g.T_i);
 }
 
-inline double getSecondDensity(double rho)
-{
-        double potential = parsedData->get_interpolated(COL_PHI, rho);
-        double rho_sqr = sqr(rho);
-        double gamma = 1 + 8 * 0.1 * rho_sqr;
-        double density = std::exp(potential)*4*(1/(std::sqrt(gamma*3)))*std::exp(-4*(0.1)*rho_sqr*rho_sqr*(1/std::sqrt(gamma))-(4/3));
-        return density;
-}
-
-
 
 
 inline double getBackgroundDensity(double rho)
@@ -236,10 +226,7 @@ inline double getBackgroundDensity(double rho)
   double potential = parsedData->get_interpolated(COL_PHI, rho);
   return std::exp(potential);
 }
-inline double getTex()
-{
-  return 1.;
-}
+
 inline double getTey(double rho, double z)
 {
   double rho_sqr = rho*rho;
@@ -264,7 +251,7 @@ double get_beta()
   // v_e=1. Beta is v_e/c = sqrt(Te_paper) / sqrt(Te_psc)
   const double PAPER_ELECTRON_TEMPERATURE = 10.;
   const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
-  return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
+  return std::sqrt(1 / PAPER_ELECTRON_TEMPERATURE);
 }
 
 // ======================================================================
