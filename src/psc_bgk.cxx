@@ -137,7 +137,7 @@ Grid_t* setupGrid()
   Grid_t::Kinds kinds(N_MY_KINDS);
   kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
   kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
-  kinds[ION_KIND] = {g.q_i, g.m_i, "i"};
+  kinds[ION_KIND] = {1., g.m_i, "i"};
 
 
 
@@ -338,7 +338,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     switch (kind) {
 
       case ELECTRON_SECOND:
-        np.n = -qDensity(idx[0], idx[1], idx[2], 0, p) + 2  - getBackgroundDensity(rho);
+        np.n = -qDensity(idx[0], idx[1], idx[2], 0, p) + 1  - getBackgroundDensity(rho);
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
@@ -365,7 +365,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         break;
 
       case ION_KIND:
-        np.n = 1.;
+        np.n = -1.;
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
         break;
