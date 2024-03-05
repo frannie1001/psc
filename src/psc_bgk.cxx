@@ -354,7 +354,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
           double py = coef * g.m_e * -vphi * z / rho;
           double px = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, py, pz}, {getTex(), getTey(rho,z), getTez(rho,y)}, np.tag});
+            {np.kind, np.n, {0, py, pz}, {1, getTey(rho,z), getTez(rho,y)}, np.tag});
         } else {
           np.p = pdist(y, z, rho);
         }
