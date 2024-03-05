@@ -337,7 +337,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     double Ti = g.T_i;
     switch (kind) {
 
-      case ELECRON_SECOND:
+      case ELECTRON_SECOND:
         np.n = (qDensity(idx[0], idx[1], idx[2], 0, p) -
                 getIonDensity(rho) * g.q_i - getBackgroundDensity(rho) * g.q_e) /
                g.q_e;
