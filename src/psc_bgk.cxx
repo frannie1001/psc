@@ -342,7 +342,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, 0, 0}, {Te, Te, Te}, np.tag});
+            {np.kind, np.n, {0, 0, 0}, {0, 0, 0}, np.tag});
         } else if (g.maxwellian == 1) {
           double vphi = parsedData->get_interpolated(COL_V_PHI, rho);
           double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
@@ -351,7 +351,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
           double py = coef * g.m_e * -vphi * z / rho;
           //double px = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, py, pz}, {0, getTey(rho,z)*sqr(get_beta()), getTez(rho,y)*sqr(get_beta)}, np.tag});
+            {np.kind, np.n, {0, py, pz}, {0, getTey(rho,z)*sqr(get_beta()), getTez(rho,y)*sqr(get_beta())}, np.tag});
         } else {
           np.p = pdist(y, z, rho);
         }
