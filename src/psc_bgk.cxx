@@ -51,8 +51,8 @@ enum DATA_COL
   enum
 {
           ELECTRON_SECOND,
+            ION_KIND,
             ELECTRON_BACKGROUND,
-              ION_KIND,
                 N_MY_KINDS,
 };
 // ======================================================================
@@ -136,8 +136,8 @@ Grid_t* setupGrid()
 
   Grid_t::Kinds kinds(N_MY_KINDS);
   kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
-  kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
   kinds[ION_KIND] = {1., g.m_i, "i"};
+  kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
 
 
 
@@ -357,17 +357,16 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         }
         break;
 
-
-      case ELECTRON_BACKGROUND:
-        np.n = getBackgroundDensity(rho);
-        np.p = setup_particles.createMaxwellian(
-          {np.kind, np.n, {0, 0, 0}, {sqr(get_beta()), sqr(get_beta()), sqr(get_beta())}, np.tag});
-        break;
-
       case ION_KIND:
         np.n = -1.;
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
+        break;
+      
+      case ELECTRON_BACKGROUND:
+        np.n = getBackgroundDensity(rho);
+        np.p = setup_particles.createMaxwellian(
+          {np.kind, np.n, {0, 0, 0}, {sqr(get_beta()), sqr(get_beta()), sqr(get_beta())}, np.tag});
         break;
 
       default: assert(false);
