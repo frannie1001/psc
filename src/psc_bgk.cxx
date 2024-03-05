@@ -249,7 +249,7 @@ double get_beta()
 {
   // PSC is normalized as c=1, but the paper has electron thermal velocity
   // v_e=1. Beta is v_e/c = sqrt(Te_paper) / sqrt(Te_psc)
-  const double PAPER_ELECTRON_TEMPERATURE = 10.;
+  const double PAPER_ELECTRON_TEMPERATURE = .1;
   const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
   return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
 }
@@ -342,7 +342,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, 0, 0}, {0, 0, 0}, np.tag});
+            {np.kind, np.n, {0, 0, 0}, {sqr(get_beta()), sqr(get_beta()), sqr(get_beta())}, np.tag});
         } else if (g.maxwellian == 1) {
           double vphi = parsedData->get_interpolated(COL_V_PHI, rho);
           double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
@@ -351,7 +351,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
           double py = coef * g.m_e * -vphi * z / rho;
           //double px = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, py, pz}, {0, getTey(rho,z)*sqr(get_beta()), getTez(rho,y)*sqr(get_beta())}, np.tag});
+            {np.kind, np.n, {0, py, pz}, {sqr(get_beta()), getTey(rho,z)*sqr(get_beta()), getTez(rho,y)*sqr(get_beta())}, np.tag});
         } else {
           np.p = pdist(y, z, rho);
         }
