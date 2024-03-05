@@ -364,7 +364,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
       case ELECTRON_BACKGROUND:
         np.n = getBackgroundDensity(rho);
         np.p = setup_particles.createMaxwellian(
-          {np.kind, np.n, {0, 0, 0}, {get_beta()*get_beta(), get_beta()*get_beta(), get_beta()*get_beta()}, np.tag});
+          {np.kind, np.n, {0, 0, 0}, {get_beta(), get_beta(), get_beta()}, np.tag});
         break;
 
       case ION_KIND:
