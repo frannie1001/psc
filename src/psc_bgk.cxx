@@ -358,7 +358,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         break;
 
       case ION_KIND:
-        np.n = -1.;
+        np.n = 1.;
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
         break;
