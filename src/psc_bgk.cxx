@@ -251,7 +251,7 @@ double get_beta()
   // v_e=1. Beta is v_e/c = sqrt(Te_paper) / sqrt(Te_psc)
   const double PAPER_ELECTRON_TEMPERATURE = 10.;
   const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
-  return std::sqrt(1 / PAPER_ELECTRON_TEMPERATURE);
+  return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
 }
 
 // ======================================================================
@@ -338,8 +338,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     switch (kind) {
 
       case ELECTRON_SECOND:
-        np.n = ((qDensity(idx[0], idx[1], idx[2], 0, p) -
-                getIonDensity(rho) * g.q_i) / g.q_e    ) - getBackgroundDensity(rho);
+        np.n = -qDensity(idx[0], idx[1], idx[2], 0, p) + 1 - getBackgroundDensity(rho);
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
@@ -352,7 +351,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
           double py = coef * g.m_e * -vphi * z / rho;
           //double px = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, py, pz}, {1., getTey(rho,z), getTez(rho,y)}, np.tag});
+            {np.kind, np.n, {0, py, pz}, {0, getTey(rho,z)*sqr(get_beta()), getTez(rho,y)*sqr(get_beta)}, np.tag});
         } else {
           np.p = pdist(y, z, rho);
         }
@@ -362,11 +361,11 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
       case ELECTRON_BACKGROUND:
         np.n = getBackgroundDensity(rho);
         np.p = setup_particles.createMaxwellian(
-          {np.kind, np.n, {0, 0, 0}, {get_beta(), get_beta(), get_beta()}, np.tag});
+          {np.kind, np.n, {0, 0, 0}, {sqr(get_beta()), sqr(get_beta()), sqr(get_beta())}, np.tag});
         break;
 
       case ION_KIND:
-        np.n = getIonDensity(rho);
+        np.n = 1.;
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
         break;
