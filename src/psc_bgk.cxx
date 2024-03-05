@@ -337,7 +337,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     double Ti = g.T_i;
     switch (kind) {
 
-      case 0:
+      case ELECRON_SECOND:
         np.n = (qDensity(idx[0], idx[1], idx[2], 0, p) -
                 getIonDensity(rho) * g.q_i - getBackgroundDensity(rho) * g.q_e) /
                g.q_e;
@@ -345,7 +345,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
             {np.kind, np.n, {0, 0, 0}, {Te, Te, Te}, np.tag});
-        } else if (g.maxwellian) {
+        } else if (g.maxwellian == 1) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           double vphi = parsedData->get_interpolated(COL_V_PHI, rho);
           double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
@@ -361,13 +361,13 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         break;
 
 
-      case 1:
+      case ELECTRON_BACKGROUND:
         np.n = getBackgroundDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {get_beta()*get_beta(), get_beta()*get_beta(), get_beta()*get_beta()}, np.tag});
         break;
 
-      case 2:
+      case ION_KIND:
         np.n = getIonDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
