@@ -229,14 +229,14 @@ inline double getBackgroundDensity(double rho)
 
 inline double getTey(double rho, double z)
 {
-  double rho_sqr = rho*rho;
+  double rho_sqr = sqr(rho);
   double denom = 1 + 8 * 0.1 * rho_sqr;
   return (-(1/denom) * z) / rho;
 }
 
 inline double getTez(double rho, double y)
 {
-  double rho_sqr = rho*rho;
+  double rho_sqr = sqr(rho);
   double denom = 1 + 8 * 0.1 * rho_sqr;
   return ((1/denom) * y) / rho;
 }
@@ -332,27 +332,25 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
                      psc_particle_np& np) {
     double y = getCoord(crd[1]);
     double z = getCoord(crd[2]);
-    double rho = sqrt(sqr(y) + sqr(z));
+    double rho = std::sqrt(sqr(y) + sqr(z));
 
     double Ti = g.T_i;
     switch (kind) {
 
       case ELECTRON_SECOND:
         np.n = (qDensity(idx[0], idx[1], idx[2], 0, p) -
-                getIonDensity(rho) * g.q_i - getBackgroundDensity(rho) * g.q_e) /
-               g.q_e;
+                getIonDensity(rho) * g.q_i) / g.q_e    ) - getBackgroundDensity(rho);
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
             {np.kind, np.n, {0, 0, 0}, {Te, Te, Te}, np.tag});
         } else if (g.maxwellian == 1) {
-          double Te = parsedData->get_interpolated(COL_TE, rho);
           double vphi = parsedData->get_interpolated(COL_V_PHI, rho);
           double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
                         (g.reverse_v_half && y < 0 ? -1 : 1);
           double pz = coef * g.m_e * vphi * y / rho;
           double py = coef * g.m_e * -vphi * z / rho;
-          double px = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
+          //double px = coef * g.m_e * 4/3;  //hard coded for Az = 2, xi = 1
           np.p = setup_particles.createMaxwellian(
             {np.kind, np.n, {0, py, pz}, {1., getTey(rho,z), getTez(rho,y)}, np.tag});
         } else {
