@@ -236,6 +236,7 @@ inline double getIonDensity(double rho)
 
 inline double getBackgroundDensity(double rho)
 {
+  rho/= get_beta();
   double potential = parsedData->get_interpolated(COL_PHI, rho);
   return std::exp(potential/sqr(get_beta())); //change possibly?
 }
