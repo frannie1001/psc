@@ -237,7 +237,7 @@ inline double getIonDensity(double rho)
 inline double getBackgroundDensity(double rho)
 {
   double potential = parsedData->get_interpolated(COL_PHI, rho);
-  return std::exp(potential); //change possibly?
+  return std::exp(potential/sqr(get_beta())); //change possibly?
 }
 
 inline double getTey(double rho, double z)
