@@ -338,7 +338,7 @@ struct pdist
     : y{y},
       z{z},
       rho{rho},
-      v_phi_dist{v_phi_maxwellian_mean(), get_beta()* v_phi_maxwellian_stdev()},
+      v_phi_dist{v_phi_maxwellian_mean(rho), get_beta()* v_phi_maxwellian_stdev(rho)},
       ///v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
       v_rho_dist{0, get_beta()}, //mean, std dev
       v_x_dist{0, get_beta()}
