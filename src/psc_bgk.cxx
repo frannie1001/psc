@@ -191,6 +191,19 @@ void writeMF(MF&& mfld, const std::string& name,
   writeGT(psc::mflds::interior(mfld.grid(), mfld.gt()), mfld.grid(), name,
           compNames);
 }
+///
+// ======================================================================
+// get_beta
+// Return the conversion factor from paper units to psc units.
+
+double get_beta()
+{
+  // PSC is normalized as c=1, but the paper has electron thermal velocity
+  // v_e=1. Beta is v_e/c = sqrt(Te_paper) / sqrt(Te_psc)
+  const double PAPER_ELECTRON_TEMPERATURE = 1;
+  const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
+  return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
+}
 
 // ======================================================================
 // helper methods
@@ -245,14 +258,14 @@ inline double getTez(double rho, double y)
 // get_beta
 // Return the conversion factor from paper units to psc units.
 
-double get_beta()
-{
+//double get_beta()
+//{
   // PSC is normalized as c=1, but the paper has electron thermal velocity
   // v_e=1. Beta is v_e/c = sqrt(Te_paper) / sqrt(Te_psc)
-  const double PAPER_ELECTRON_TEMPERATURE = 1;
-  const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
-  return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
-}
+//  const double PAPER_ELECTRON_TEMPERATURE = 1;
+ // const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
+//  return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
+//}
 
 // ======================================================================
 // v_phi_cdf
