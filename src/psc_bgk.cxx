@@ -291,7 +291,8 @@ struct pdist
     : y{y},
       z{z},
       rho{rho},
-      v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
+      v_phi_dist{0, get_beta()}
+      ///v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
       v_rho_dist{0, get_beta()}, //mean, std dev
       v_x_dist{0, get_beta()}
   {}
