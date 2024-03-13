@@ -136,7 +136,7 @@ Grid_t* setupGrid()
 
   Grid_t::Kinds kinds(N_MY_KINDS);
   kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
-  kinds[ION_KIND] = {1., g.m_i, "i"};
+  kinds[ION_KIND] = {1, g.m_i, "i"};
   kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
 
 
@@ -312,7 +312,7 @@ double v_phi_maxwellian_mean(double rho)
   double A_phi = B*rho/2;
   double rho_sqr = sqr(rho);
 
-  double wamma = 1. + 8 * g.k * rho_sqr;
+  double wamma = 1 + 8 * g.k * rho_sqr;
   double numerator = 8 * g.k * rho_sqr * A_phi;
   
 
@@ -328,7 +328,7 @@ double v_phi_maxwellian_stdev(double rho)
   double A_phi = B*rho/2;
   double rho_sqr = sqr(rho);
 
-  double wamma = 1. + 8 * g.k * rho_sqr;
+  double wamma = 1 + 8 * g.k * rho_sqr;
   
 
   return 1/std::sqrt(wamma);
@@ -388,7 +388,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     switch (kind) {
 
       case ELECTRON_SECOND:
-        np.n = 2. - qDensity(idx[0], idx[1], idx[2], 0, p) - getBackgroundDensity(rho);
+        np.n = 1 - qDensity(idx[0], idx[1], idx[2], 0, p) - getBackgroundDensity(rho);
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
@@ -408,7 +408,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         break;
 
       case ION_KIND:
-        np.n = 2.;
+        np.n = 1;
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
         break;
