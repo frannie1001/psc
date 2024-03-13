@@ -236,14 +236,12 @@ inline double getIonDensity(double rho)
 
 inline double getBackgroundDensity(double rho)
 {
-  rho/= get_beta();
   double potential = parsedData->get_interpolated(COL_PHI, rho);
   return std::exp(potential/sqr(get_beta())); //change possibly?
 }
 
 inline double getTey(double rho, double z)
 {
-  rho /= get_beta();
   double rho_sqr = sqr(rho);
   double denom = 1 + 8 * 0.1 * rho_sqr;
   return (-(1/denom) * z) / rho;
@@ -251,7 +249,6 @@ inline double getTey(double rho, double z)
 
 inline double getTez(double rho, double y)
 {
-  rho /= get_beta();
   double rho_sqr = sqr(rho);
   double denom = 1 + 8 * 0.1 * rho_sqr;
   return ((1/denom) * y) / rho;
