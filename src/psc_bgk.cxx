@@ -310,11 +310,11 @@ double v_phi_maxwellian_mean(double rho)
   double A_phi = B*rho/2;
   double rho_sqr = sqr(rho);
 
-  double gamma = 1. + 8 * g.k * rho_sqr;
+  double wamma = 1. + 8 * g.k * rho_sqr;
   double numerator = 8 * g.k * rho_sqr * A_phi;
   
 
-  return numerator/gamma;
+  return numerator/wamma;
 }
 
 double v_phi_maxwellian_stdev(double rho)
@@ -326,10 +326,10 @@ double v_phi_maxwellian_stdev(double rho)
   double A_phi = B*rho/2;
   double rho_sqr = sqr(rho);
 
-  double gamma = 1. + 8 * g.k * rho_sqr;
+  double wamma = 1. + 8 * g.k * rho_sqr;
   
 
-  return 1/std::sqrt(gamma);
+  return 1/std::sqrt(wamma);
 }
 
 struct pdist
@@ -338,7 +338,7 @@ struct pdist
     : y{y},
       z{z},
       rho{rho},
-      v_phi_dist{v_phi_maxwellian_mean(rho), get_beta()* v_phi_maxwellian_stdev(rho)},
+      v_phi_dist{v_phi_maxwellian_mean(rho)* get_beta(), get_beta()* v_phi_maxwellian_stdev(rho)},
       ///v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
       v_rho_dist{0, get_beta()}, //mean, std dev
       v_x_dist{0, get_beta()}
