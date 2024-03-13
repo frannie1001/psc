@@ -238,7 +238,7 @@ inline double getBackgroundDensity(double rho)
 {
   double potential = parsedData->get_interpolated(COL_PHI, rho);
   ///return std::exp(potential/sqr(get_beta())); //change possibly?
-  double value  = pow (2.7182818284, potential/sqr(get_beta());
+  double value  = pow (2.7182818284, potential/sqr(get_beta()));
   return value;
 }
 
