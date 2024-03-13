@@ -53,7 +53,7 @@ enum DATA_COL
           ELECTRON_SECOND,
             ION_KIND,
             ELECTRON_BACKGROUND,
-                N_MY_KINDS,
+                N_MY_KINDS
 };
 // ======================================================================
 // Global parameters
