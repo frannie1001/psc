@@ -136,7 +136,7 @@ Grid_t* setupGrid()
 
   Grid_t::Kinds kinds(N_MY_KINDS);
   kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
-  kinds[ION_KIND] = {1, g.m_i, "i"};
+  kinds[ION_KIND] = {g.q_i, g.m_i, "i"};
   kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
 
 
@@ -237,9 +237,7 @@ inline double getIonDensity(double rho)
 inline double getBackgroundDensity(double rho)
 {
   double potential = parsedData->get_interpolated(COL_PHI, rho);
-  ///return std::exp(potential/sqr(get_beta())); //change possibly?
-  double value  = pow (2.7182818284, potential/sqr(get_beta()));
-  return value;
+  return std::exp(potential/sqr(get_beta())); //change possibly?
 }
 
 inline double getTey(double rho, double z)
@@ -390,7 +388,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
     switch (kind) {
 
       case ELECTRON_SECOND:
-        np.n = 1.00000000001 - qDensity(idx[0], idx[1], idx[2], 0, p) - getBackgroundDensity(rho);
+        np.n = getIonDensity(rho) - qDensity(idx[0], idx[1], idx[2], 0, p) - getBackgroundDensity(rho);
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, rho);
           np.p = setup_particles.createMaxwellian(
@@ -410,7 +408,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         break;
 
       case ION_KIND:
-        np.n = 1.00000000001;
+        np.n = getIonDensity(rho);
         np.p = setup_particles.createMaxwellian(
           {np.kind, np.n, {0, 0, 0}, {Ti, Ti, Ti}, np.tag});
         break;
