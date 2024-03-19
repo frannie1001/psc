@@ -122,7 +122,11 @@ struct SetupParticles
     if (fractional_n_particles_per_cell) {
       return np.n / norm_.cori + dist.get();
     }
-    return np.n / norm_.cori + .5;
+    int n = np.n / norm_.cori + .5;
+      if (n == 0) {
+        return 1;
+      }
+    return n;
   }
 
   // ----------------------------------------------------------------------
