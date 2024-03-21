@@ -351,12 +351,22 @@ struct pdist
     double v_phi = v_phi_dist.get();
     double v_rho = v_rho_dist.get();
     double v_x = v_x_dist.get();
+    rho /= get_beta();
+
+  double B = g.Hx;
+  double A_phi = B*rho/2;
+  double rho_sqr = sqr(rho);
+
+  double wamma2 = 1 + 8 * g.k * rho_sqr;
+  
+
+  thing = 1/std::sqrt(wamma2);
 
     double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
                   (g.reverse_v_half && y < 0 ? -1 : 1);
     double p_x = coef * g.m_e * v_x;
-    double p_y = coef * g.m_e * (v_phi * -z + v_rho * y) / rho;
-    double p_z = coef * g.m_e * (v_phi * y + v_rho * z) / rho;
+    double p_y = coef * g.m_e * ((v_phi * thing) * -z + v_rho * y) / rho;
+    double p_z = coef * g.m_e * ((v_phi * thing )* y + v_rho * z) / rho;
     return Double3{p_x, p_y, p_z};
   }
 
