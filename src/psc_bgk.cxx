@@ -391,7 +391,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
       case ELECTRON_SECOND:
         np.n = getIonDensity(rho) - qDensity(idx[0], idx[1], idx[2], 0, p) - getBackgroundDensity(rho);
         if (rho == 0) {
-          double Te = parsedData->get_interpolated(COL_TE, rho);
+          double Te = parsedData->get_interpolated(COL_TE, 0);
           np.p = setup_particles.createMaxwellian(
             {np.kind, np.n, {0, 0, 0}, {Te, Te, Te}, np.tag});
         } else if (g.maxwellian == 1) {
