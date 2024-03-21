@@ -360,7 +360,7 @@ struct pdist
   double wamma2 = 1 + 8 * g.k * rho_sqr;
   
 
-  thing = 1/std::sqrt(wamma2);
+  double thing = 1/std::sqrt(wamma2);
 
     double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
                   (g.reverse_v_half && y < 0 ? -1 : 1);
