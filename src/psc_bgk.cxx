@@ -417,7 +417,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         np.n = getBackgroundDensity(rho);
         //double Te0 = parsedData->get_interpolated(COL_TE, 0);
         np.p = setup_particles.createMaxwellian(
-          {np.kind, np.n, {0, 0, 0}, {0.01, 0.01, 0.01}, np.tag});
+          {np.kind, np.n, {0, 0, 0}, {sqr(0.01), sqr(0.01), sqr(0.01)}, np.tag});
         break;
 
       default: assert(false);
