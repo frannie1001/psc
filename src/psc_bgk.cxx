@@ -340,8 +340,8 @@ struct pdist
     : y{y},
       z{z},
       rho{rho},
-      ///v_phi_dist{v_phi_maxwellian_mean(rho)/get_beta(),  get_beta()*v_phi_maxwellian_stdev(rho)},
-      v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
+      v_phi_dist{v_phi_maxwellian_mean(rho)*get_beta(),  get_beta()*v_phi_maxwellian_stdev(rho)},
+      ///v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
       v_rho_dist{0, get_beta()}, //mean, std dev
       v_x_dist{0, get_beta()}
   {}
@@ -362,8 +362,8 @@ struct pdist
 
 private:
   double y, z, rho;
-  //rng::Normal<double> v_phi_dist;
-  rng::InvertedCdf<double> v_phi_dist;
+  rng::Normal<double> v_phi_dist;
+  ///rng::InvertedCdf<double> v_phi_dist;
   rng::Normal<double> v_rho_dist;
   rng::Normal<double> v_x_dist;
 };
