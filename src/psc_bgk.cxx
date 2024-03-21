@@ -306,7 +306,7 @@ double v_phi_cdf(double v_phi, double rho)
 double v_phi_maxwellian_mean(double rho)
 {
   // convert units from psc to paper
-  ///rho /= get_beta();
+  rho /= get_beta();
 
   double B = g.Hx;
   double A_phi = B*rho/2;
@@ -322,7 +322,7 @@ double v_phi_maxwellian_mean(double rho)
 double v_phi_maxwellian_stdev(double rho)
 {
   // convert units from psc to paper
-  ///rho /= get_beta();
+  rho /= get_beta();
 
   double B = g.Hx;
   double A_phi = B*rho/2;
@@ -340,7 +340,7 @@ struct pdist
     : y{y},
       z{z},
       rho{rho},
-      v_phi_dist{v_phi_maxwellian_mean(rho)*get_beta(),  get_beta()*v_phi_maxwellian_stdev(rho)},
+      v_phi_dist{v_phi_maxwellian_mean(rho)/get_beta(),  get_beta()*v_phi_maxwellian_stdev(rho)},
       ///v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
       v_rho_dist{0, get_beta()}, //mean, std dev
       v_x_dist{0, get_beta()}
