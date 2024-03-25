@@ -356,8 +356,8 @@ struct pdist
     double coef = g.v_e_coef * (g.reverse_v ? -1 : 1) *
                   (g.reverse_v_half && y < 0 ? -1 : 1);
     double p_x = coef * g.m_e * v_x;
-    double p_y = coef * g.m_e * ((2* v_phi  / sqrt(1 + 8 * g.k * (rho*rho/sqr(get_beta()))))* -z + v_rho * y) / rho;
-    double p_z = coef * g.m_e * ((2* v_phi /  sqrt(1 + 8 * g.k * (rho*rho/sqr(get_beta()))) )* y + v_rho * z) / rho;
+    double p_y = coef * g.m_e * ((v_phi  / sqrt(1 + 8 * g.k * (rho*rho/sqr(get_beta()))))* -z + v_rho * y) / rho;
+    double p_z = coef * g.m_e * ((v_phi /  sqrt(1 + 8 * g.k * (rho*rho/sqr(get_beta()))) )* y + v_rho * z) / rho;
     return Double3{p_x, p_y, p_z};
   }
 
