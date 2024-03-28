@@ -135,7 +135,7 @@ Grid_t* setupGrid()
 
 
   Grid_t::Kinds kinds(N_MY_KINDS);
-  kinds[ELECTRON_SECOND] = {g.q_e*2, g.m_e, "e1"};
+  kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
   kinds[ION_KIND] = {g.q_i, g.m_i, "i"};
   kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
 
