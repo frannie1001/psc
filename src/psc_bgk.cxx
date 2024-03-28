@@ -575,7 +575,7 @@ static void run(int argc, char** argv)
   outp_params.every_step = g.particles_every;
   outp_params.data_dir = ".";
   outp_params.basename = "prt";
-  OutputParticles outp{grid, outp_params};
+  OutputParticles outp{grid, outp_params, id};
 
   int oute_interval = -100;
   DiagEnergies oute{grid.comm(), oute_interval};
