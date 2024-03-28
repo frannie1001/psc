@@ -334,6 +334,25 @@ double v_phi_maxwellian_stdev(double rho)
   return 1/std::sqrt(wamma2);
 }
 
+
+// ======================================================================
+// v_x_maxwellian
+// trying to make a maxwellian for v_x
+
+double v_x_maxwellian_mean()
+{
+  
+
+  return (2*g.xi*g.Az0)/(1+2*g.xi);
+}
+
+double v_x_maxwellian_stdev()
+{
+  
+
+  return 1/std::sqrt(1+2*g.xi);
+}
+//===========================================================
 struct pdist
 {
   pdist(double y, double z, double rho)
@@ -343,7 +362,7 @@ struct pdist
       v_phi_dist{v_phi_maxwellian_mean(rho)*get_beta(),  get_beta()*v_phi_maxwellian_stdev(rho)},
       ///v_phi_dist{[=](double v_phi) { return v_phi_cdf(v_phi, rho); }}, //change me
       v_rho_dist{0, get_beta()}, //mean, std dev
-      v_x_dist{0, get_beta()}
+      v_x_dist{v_x_maxwellian_mean()*get_beta(), get_beta()*v_x_maxwellian_stdev()}
   {}
 
   Double3 operator()()
@@ -398,7 +417,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, 0);
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {0, 0, 0}, {Te, Te, Te}, np.tag});
+            {np.kind, np.n, {v_x_maxwellian_mean()*get_beta(), 0, 0}, {sqr(get_beta()*v_x_maxwellian_stdev()), Te, Te}, np.tag});
         } else if (g.maxwellian == 1) {
           double vphi = parsedData->get_interpolated(COL_V_PHI, rho);
           np.tag = kind;
