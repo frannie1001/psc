@@ -30,7 +30,7 @@ double getSpikeSize(double B, double k)
   double q = p * p * p + t;
   double s = sqrt(t * (2. * q - t));
 
-  double beta = .001; // FIXME don't hardcode this (see psc_bgk.cxx get_beta())
+  double beta = .01; // FIXME don't hardcode this (see psc_bgk.cxx get_beta())
   double r = (std::cbrt(q + s) + std::cbrt(q - s) + p) * beta;
   return r;
 }
