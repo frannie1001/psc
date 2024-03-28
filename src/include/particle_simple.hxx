@@ -32,7 +32,7 @@ struct ParticleSimple
   }
 
   KG_INLINE psc::particle::Id id() const { return 0; }
-  KG_INLINE psc::particle::Tag tag() const { return tag; }
+  //KG_INLINE psc::particle::Tag tag() const { return tag; }
 
 public:
   Real3 x;
