@@ -77,7 +77,7 @@ struct PscBgkParams
   int nicell;          // number of particles per gripdoint when density=1
 
   double k = .1;  // a parameter for BGK solutions
-  double h0 = .9; // a parameter for BGK solutions
+  double h0 = -.9; // a parameter for BGK solutions
 
   int fields_every;    // interval for pfd output
   int moments_every;   // interval for pfd_moments output
