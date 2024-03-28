@@ -138,7 +138,6 @@ Grid_t* setupGrid()
   kinds[ELECTRON_SECOND] = {g.q_e, g.m_e, "e1"};
   kinds[ION_KIND] = {g.q_i, g.m_i, "i"};
   kinds[ELECTRON_BACKGROUND] = {g.q_e, g.m_e, "e0"};
-  grid.kinds = kinds;
 
 
 
