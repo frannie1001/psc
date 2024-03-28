@@ -202,7 +202,8 @@ double get_beta()
   // v_e=1. Beta is v_e/c = sqrt(Te_paper) / sqrt(Te_psc)
   const double PAPER_ELECTRON_TEMPERATURE = 1;
   const double pscElectronTemperature = parsedData->get_interpolated(COL_TE, 0);
-  return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
+  ///return std::sqrt(pscElectronTemperature / PAPER_ELECTRON_TEMPERATURE);
+  return 0.01;
 }
 
 // ======================================================================
@@ -417,7 +418,7 @@ void initializeParticles(Balance& balance, Grid_t*& grid_ptr, Mparticles& mprts,
         if (rho == 0) {
           double Te = parsedData->get_interpolated(COL_TE, 0);
           np.p = setup_particles.createMaxwellian(
-            {np.kind, np.n, {v_x_maxwellian_mean()*get_beta(), 0, 0}, {sqr(get_beta()*v_x_maxwellian_stdev()), Te, Te}, np.tag});
+            {np.kind, np.n, {v_x_maxwellian_mean()*get_beta(), 0, 0}, {sqr(get_beta()*v_x_maxwellian_stdev()), sqr(get_beta()), sqr(get_beta())}, np.tag});
         } else if (g.maxwellian == 1) {
           double vphi = parsedData->get_interpolated(COL_V_PHI, rho);
           np.tag = kind;
