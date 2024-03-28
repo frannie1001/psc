@@ -285,7 +285,7 @@ double v_phi_cdf(double v_phi, double rho)
   double rho_sqr = sqr(rho);
 
   double gamma = 1. + 8 * g.k * rho_sqr;
-  double alpha = 1. + g.h0 / std::sqrt(gamma) *
+  double alpha = 1. - g.h0 / std::sqrt(gamma) *
                        std::exp(-g.k * sqr(B) * sqr(rho_sqr) / gamma);
 
   double mean0 = 0;
