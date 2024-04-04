@@ -313,8 +313,8 @@ double v_phi_maxwellian_mean(double rho)
   double A_phi = B*rho/2;
   double rho_sqr = sqr(rho);
 
-  double wamma1 = 1 + 8 * 0.1 * rho_sqr;
-  double numerator = 8 * 0.1 * rho_sqr * A_phi;
+  double wamma1 = 1 + 8 * g.k * rho_sqr;
+  double numerator = 8 * g.k * rho_sqr * A_phi;
   
 
   return numerator/wamma1;
@@ -329,7 +329,7 @@ double v_phi_maxwellian_stdev(double rho)
   double A_phi = B*rho/2;
   double rho_sqr = sqr(rho);
 
-  double wamma2 = 1 + 8 * 0.1 * rho_sqr;
+  double wamma2 = 1 + 8 * g.k * rho_sqr;
   
 
   return 1/std::sqrt(wamma2);
