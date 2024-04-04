@@ -76,9 +76,9 @@ struct PscBgkParams
   int n_patches;       // number of patches
   int nicell;          // number of particles per gripdoint when density=1
 
-  double k = .1;  // a parameter for BGK solutions
-  double h0 = -4; // a parameter for BGK solutions
-  double xi = 1; // a parameter for BGK solutions
+  double k = 1.2;  // a parameter for BGK solutions
+  double h0 = -66.0; // a parameter for BGK solutions
+  double xi = 2.0; // a parameter for BGK solutions
   double Az0 = 2; // a parameter for BGK solutions
 
   int fields_every;    // interval for pfd output
