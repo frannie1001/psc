@@ -76,10 +76,10 @@ struct PscBgkParams
   int n_patches;       // number of patches
   int nicell;          // number of particles per gripdoint when density=1
 
-  double k = 1.2;  // a parameter for BGK solutions
-  double h0 = -66.0; // a parameter for BGK solutions
-  double xi = 2.0; // a parameter for BGK solutions
-  double Az0 = 2; // a parameter for BGK solutions
+  double k;  // a parameter for BGK solutions
+  double h0 ; // a parameter for BGK solutions
+  double xi; // a parameter for BGK solutions
+  double Az0; // a parameter for BGK solutions
 
   int fields_every;    // interval for pfd output
   int moments_every;   // interval for pfd_moments output
@@ -127,6 +127,11 @@ struct PscBgkParams
     moments_every = parsedParams.getOrDefault<int>("moments_every", 200);
     gauss_every = parsedParams.getOrDefault<int>("gauss_every", 200);
     particles_every = parsedParams.getOrDefault<int>("particles_every", 0);
+
+    k = parsedParams.get<double>("k");  // a parameter for BGK solutions
+    h0 = parsedParams.get<double>("h0"); // a parameter for BGK solutions
+    xi = parsedParams.get<double>("xi");  // a parameter for BGK solutions
+    Az0 = parsedParams.get<double>("Az0");  // a parameter for BGK solutions
 
     do_ion = parsedParams.getOrDefault<bool>("ion", false);
     T_i = parsedParams.getOrDefault<double>("T_i", 0);
