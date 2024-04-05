@@ -128,10 +128,10 @@ struct PscBgkParams
     gauss_every = parsedParams.getOrDefault<int>("gauss_every", 200);
     particles_every = parsedParams.getOrDefault<int>("particles_every", 0);
 
-    k = parsedParams.get<double>("k", .1);  // a parameter for BGK solutions
-    h0 = parsedParams.get<double>("h0", -.9); // a parameter for BGK solutions
-    xi = parsedParams.get<double>("xi", 1);  // a parameter for BGK solutions
-    Az0 = parsedParams.get<double>("Az0", 2);  // a parameter for BGK solutions
+    k = parsedParams.get<double>("k");  // a parameter for BGK solutions
+    h0 = parsedParams.get<double>("h0"); // a parameter for BGK solutions
+    xi = parsedParams.get<double>("xi");  // a parameter for BGK solutions
+    Az0 = parsedParams.get<double>("Az0");  // a parameter for BGK solutions
 
     do_ion = parsedParams.getOrDefault<bool>("ion", false);
     T_i = parsedParams.getOrDefault<double>("T_i", 0);
